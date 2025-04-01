@@ -838,7 +838,7 @@
     </footer>
 
     <script>
-        // Basic functionality for demo purposes
+        // Password visibility toggle
         document.querySelector('.toggle-password').addEventListener('click', function() {
             const passwordInput = document.getElementById('password-input');
             const icon = this.querySelector('i');
@@ -853,32 +853,128 @@
                 icon.classList.add('fa-eye');
             }
         });
-        
-        // Tab switching functionality
+    
+        // Real-time password analysis
+        document.getElementById('password-input').addEventListener('input', async function() {
+            const password = this.value;
+            if (!password) {
+                resetStrengthIndicator();
+                return;
+            }
+    
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password })
+            });
+    
+            const result = await response.json();
+            updateStrengthIndicator(result);
+        });
+    
+        // Password generation
+        async function generatePasswords() {
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            const result = await response.json();
+            updateSuggestions(result.passwords);
+        }
+    
+        // Tab switching
         const tabBtns = document.querySelectorAll('.tab-btn');
+        const analyzeContent = document.querySelector('.password-form');
+        let generateContent = null;
+    
         tabBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 tabBtns.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
                 
-                // In a real implementation, we would show/hide different tab content here
+                if (this.textContent === 'Generate Password') {
+                    generatePasswords();
+                    analyzeContent.style.display = 'none';
+                    if (!generateContent) {
+                        generateContent = createGenerateContent();
+                    }
+                    generateContent.style.display = 'block';
+                } else {
+                    analyzeContent.style.display = 'block';
+                    if (generateContent) {
+                        generateContent.style.display = 'none';
+                    }
+                }
             });
         });
-        
-        // Copy password functionality
-        const copyBtns = document.querySelectorAll('.copy-btn');
-        copyBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const passwordText = this.nextElementSibling.textContent;
-                navigator.clipboard.writeText(passwordText);
-                
-                // Show feedback (in a real implementation)
-                this.innerHTML = '<i class="fas fa-check"></i>';
-                setTimeout(() => {
-                    this.innerHTML = '<i class="far fa-copy"></i>';
-                }, 2000);
+    
+        // Helper functions
+        function updateStrengthIndicator(result) {
+            const meterFill = document.querySelector('.strength-meter-fill');
+            const strengthBadge = document.querySelector('.strength-badge');
+            const factorsContainer = document.querySelector('.strength-factors');
+    
+            meterFill.style.width = `${result.score}%`;
+            strengthBadge.textContent = result.strength;
+    
+            factorsContainer.innerHTML = result.feedback.map(item => `
+                <div class="factor-item">
+                    <span class="factor-icon ${item.pass ? '' : 'fail'}">
+                        <i class="fas fa-${item.pass ? 'check' : 'times'}-circle"></i>
+                    </span>
+                    <span>${item.message}</span>
+                </div>
+            `).join('');
+        }
+    
+        function resetStrengthIndicator() {
+            const meterFill = document.querySelector('.strength-meter-fill');
+            const strengthBadge = document.querySelector('.strength-badge');
+            const factorsContainer = document.querySelector('.strength-factors');
+    
+            meterFill.style.width = '0%';
+            strengthBadge.textContent = 'None';
+            factorsContainer.innerHTML = '';
+        }
+    
+        function updateSuggestions(passwords) {
+            const container = document.querySelector('.suggestion-cards');
+            container.innerHTML = passwords.map(pwd => `
+                <div class="suggestion-card">
+                    <button class="copy-btn"><i class="far fa-copy"></i></button>
+                    <div class="password-text">${pwd.text}</div>
+                    <div class="password-meta">
+                        <span>Memorability: ${pwd.memorability}</span>
+                        <div class="password-score">
+                            <span class="score-badge">${Math.floor(pwd.score/10)}</span>
+                            <span>Strength</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+    
+            // Reinitialize copy buttons
+            initializeCopyButtons();
+        }
+    
+        function initializeCopyButtons() {
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const passwordText = this.nextElementSibling.textContent;
+                    navigator.clipboard.writeText(passwordText);
+                    
+                    this.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="far fa-copy"></i>';
+                    }, 2000);
+                });
             });
-        });
+        }
     </script>
 </body>
 </html>
