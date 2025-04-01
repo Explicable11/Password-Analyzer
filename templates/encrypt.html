@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}AES-256 Encryption{% endblock %}
+
+{% block content %}
+    <h1>AES-256 Encryption</h1>
+    <form method="POST">
+        <label>Message to encrypt:</label><br>
+        <textarea name="message" rows="4" cols="50"></textarea><br>
+        <label>Encryption Password:</label><br>
+        <input type="password" name="password" required><br><br>
+        <input type="submit" value="Encrypt">
+    </form>
+
+    {% if encrypted %}
+    <h2>Results</h2>
+    <p><strong>Original:</strong> {{ original }}</p>
+    <p><strong>Encrypted:</strong> {{ encrypted }}</p>
+    {% endif %}
+{% endblock %}

@@ -139,6 +139,38 @@ nav {
     gap: 30px;
 }
 
+/* Feature Cards Styling */
+.features-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 2rem 0;
+}
+
+.feature-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    padding: 1.5rem;
+    width: 300px;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
 .feature-card {
     background-color: #1e293b;
     border-radius: 15px;
@@ -529,6 +561,13 @@ nav {
     font-size: 24px;
     margin-bottom: 15px;
     color: var(--primary-light);
+}
+
+.insight-card .icon {
+    font-size: 3rem;
+    color: #4a90e2;
+    margin-bottom: 15px;
+    display: block;
 }
 
 .insights-chart {
