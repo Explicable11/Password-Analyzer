@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+uufrom flask import Flask, render_template, request, jsonify
 import re
 import random
 from flask import send_from_directory
@@ -134,7 +134,7 @@ def generate_password():
             ]
         }
         
-        print("Generated passwords:", result)  # Debug print
+        print("Generated passwords:", result)  # debug print
         return jsonify(result)
     except Exception as e:
         print(f"Error generating passwords: {str(e)}")
