@@ -62,7 +62,7 @@ def generate_smart_password(length=16):
     number = str(random.randint(100, 999))
     special = random.choice('!@#$%^&*')
     
-    # Combine with some character substitutions
+    # combine with some character substitutions
     password = f"{adj}{special}{noun}{number}"
     
     # Add some common substitutions to make it more secure
