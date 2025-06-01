@@ -56,7 +56,7 @@ def generate_smart_password(length=16):
     adjectives = ['Happy', 'Brave', 'Bright', 'Swift', 'Clever']
     nouns = ['Tiger', 'Mountain', 'Ocean', 'Forest', 'Star']
     
-    # Create base password
+    # create base password
     adj = random.choice(adjectives)
     noun = random.choice(nouns)
     number = str(random.randint(100, 999))
