@@ -10,7 +10,7 @@ def check_password_strength(password):
     score = 0
     feedback = []
     
-    # Length Check
+    # length Check
     if len(password) >= 12:
         score += 20
         feedback.append({"pass": True, "message": "Length (12+ characters)"})
